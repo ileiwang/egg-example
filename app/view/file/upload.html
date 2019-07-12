@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>File Upload</title>
+</head>
+<body>
+	<script type="text/javascript">
+		$('form').submit(function(e) {
+	    e.preventDefault();
+	    var formData = new FormData();
+	    formData.append('name', $('input[type=text]').val());
+	    // Attach file
+	    formData.append('file', $('input[type=file]')[0].files[0]);
+	    // console.log(formData);
+
+	    $.ajax({
+	      // url: '/file/upload?_csrf=' + getCsrf(),
+	      url: '/file/upload',
+	      data: formData,
+	      method: 'POST',
+	      contentType: false, // NEEDED, DON'T OMIT THIS (requires jQuery 1.6+)
+	      processData: false, // NEEDED, DON'T OMIT THIS
+	      success: function(result) {
+	        console.log(result);
+	      },
+	      error: function(responseStr) {
+	        alert("error", responseStr);
+	      }
+	    });
+	    // 通过 cookie 获取 csrf token
+	    function getCsrf() {
+	      var keyValue = document.cookie.match('(^|;) ?csrfToken=([^;]*)(;|$)');
+	      return keyValue ? keyValue[2] : null;
+	    }
+	  });
+	</script>
+
+	<form method="post" action="/file/upload" enctype="multipart/form-data">
+	  name: <input name="name" />
+	  <br>
+	  file: <input name="file" type="file" />
+	  <br>
+	  <button type="submit">Upload</button>	
+	</form>
+</body>
+</html>
